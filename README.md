@@ -18,7 +18,7 @@ We provide information about the environment in `Pipfile` and `Pipfile.lock`. On
 
 To reproduce the experiments, follow these steps:
 
-    * (Section 5.1) Execute the command `./scripts/sec_5.1/run.sh`.
-    * (Section 5.2) Execute the command `./scripts/sec_5.2/run.sh`.
-    * (Section 5.3) Execute the command `./scripts/sec_5.3/run.sh`.
-    * (Section 5.4) Execute the command `./scripts/sec_5.4/run.sh` requires `wandb` to visualize. 
+* (Section 5.1) Execute the command `./scripts/sec_5.1/run.sh`.
+* (Section 5.2) Execute the command `./scripts/sec_5.2/run.sh`.
+* (Section 5.3) Execute the command `./scripts/sec_5.3/run.sh`.
+* (Section 5.4) Execute the command `./scripts/sec_5.4/run.sh` requires `wandb` to visualize. 
