@@ -109,7 +109,9 @@ def de_step(key: jax.random.PRNGKey,
             target: Target,
             y: jax.Array,
             optim: PIDOpt,
-            hyperparams: PIDParameters) -> Tuple[float, PIDCarry]:
+            hyperparams: PIDParameters,
+            return_grad: bool = False
+            ) -> Tuple[float, PIDCarry]:
     '''
     Density Estimation Step.
     '''
@@ -121,12 +123,13 @@ def de_step(key: jax.random.PRNGKey,
                        target,
                        y,
                        hyperparams)
-    lval, pid, theta_opt_state = loss_step(
+    lval, pid, theta_opt_state, returned_grad = loss_step(
         theta_key,
         loss,
         carry.id,
         optim.theta_optim,
         carry.theta_opt_state,
+        return_grad=return_grad
     )
 
     pid, carry = de_particle_step(
@@ -143,4 +146,4 @@ def de_step(key: jax.random.PRNGKey,
         theta_opt_state=theta_opt_state,
         r_opt_state=carry.r_opt_state,
         r_precon_state=carry.r_precon_state)
-    return lval, carry
+    return lval, carry, returned_grad

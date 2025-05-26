@@ -13,7 +13,9 @@ def loss_step(key: PRNGKey,
                               float],
               model: eqx.Module,
               optim: GradientTransformation,
-              opt_state: OptState):
+              opt_state: OptState,
+              return_grad: bool = False
+              ):
     """
     Loss Step.
     loss : Callable[[PRNGKey, Module], float]
@@ -30,7 +32,10 @@ def loss_step(key: PRNGKey,
                                       model)
     # model = model.apply_updates(updates)
     model = eqx.apply_updates(model, updates)
-    return val, model, opt_state
+    
+    if return_grad:
+        return val, model, opt_state, grad
+    return val, model, opt_state, None
 
 def clip_norm(x, max_norm, eps=1e-6, return_norm=False):
     norm = np.linalg.norm

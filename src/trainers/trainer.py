@@ -64,7 +64,8 @@ def subsample_trainer(
         metrics=None,
         checkpoint=None,
         use_jit=False,
-        notebook=False
+        notebook=False,
+        return_grad=False
         ):
     '''
     step : Callable[[PRNGKey, Dict, Target, Array], Tuple[float, Dict]] 
@@ -93,14 +94,17 @@ def subsample_trainer(
         for i in range(n_iter):
             step_key, key = jax.random.split(key, 2)
             y_indices = indices[i * subsample:(i + 1) * subsample]
-            lval, carry = step(step_key,
+            lval, carry, grad = step(step_key,
                                carry,
                                target,
                                y_indices)
             assert np.isnan(lval) == False, "Loss is NaN"
             a_lval += (lval - a_lval) / (i + 1)
             pbar.set_description(f"Avg Loss {a_lval:.3f}")
+            
         history['loss'].append(a_lval)
+        if return_grad:
+            history['grad'].append(grad)
         if metrics is not None:
             metrics_key, key = jax.random.split(key, 2)
             metric_dict = metrics(metrics_key,
@@ -108,6 +112,6 @@ def subsample_trainer(
                                   target)
             for k, v in metric_dict.items():
                 history[k].append(v)
-    for k, v in history.items():
-        history[k] = np.array(v)
+    # for k, v in history.items():
+    #     history[k] = np.array(v)
     return history, carry

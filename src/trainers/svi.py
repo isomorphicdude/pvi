@@ -49,7 +49,9 @@ def de_step(key: jax.random.PRNGKey,
             target: Target,
             y: jax.Array,
             optim: SVIOpt,
-            hyperparams: SVIParameters):
+            hyperparams: SVIParameters,
+            return_grad=False
+            ):
     def loss(key, params, static):
         return de_loss(key,
                        params,
@@ -58,10 +60,11 @@ def de_step(key: jax.random.PRNGKey,
                        y,
                        n_samples=hyperparams.mc_n_samples,
                        K=hyperparams.K)
-    val, model, opt_state = loss_step(key,
+    val, model, opt_state, returned_grad = loss_step(key,
                                       loss,
                                       carry.id,
                                       optim.theta_optim,
-                                      carry.theta_opt_state)
+                                      carry.theta_opt_state,
+                                      return_grad=return_grad)
     return val, SVICarry(id=model,
-                         theta_opt_state=opt_state)
+                         theta_opt_state=opt_state), returned_grad

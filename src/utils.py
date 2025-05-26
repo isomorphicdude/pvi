@@ -131,7 +131,9 @@ def make_r_precon(r_precon_param: ROptParameters):
 def make_step_and_carry(
         key: jax.random.PRNGKey,
         parameters: Parameters,
-        target: Target):
+        target: Target,
+        return_grad: bool = False
+        ):
     """
     Make a step function and carry for a given algorithm.
     """
@@ -188,6 +190,7 @@ def make_step_and_carry(
             y,
             optim,
             parameters.extra_alg_parameters,
+            return_grad=return_grad
         )
     return partial_step, carry
 
