@@ -8,6 +8,9 @@ class LReg:
         self.alpha = alpha
     
     def log_prior(self, x):
+        """
+        Standard Gaussian prior for logistic regression weights.
+        """
         assert x.ndim == 1
         scale = (1 / self.alpha) ** 0.5
         log_prior =  norm.logpdf(
@@ -17,6 +20,11 @@ class LReg:
         return log_prior
 
     def log_likeli(self, x, y):
+        """
+        logit link function for logistic regression.
+        log-likelihood= target * logit - log(1 + exp(logit))
+        where logit = covariates @ x
+        """
         target, covariates = y
         logit = covariates @ x
         assert target.ndim == 1, f"Shape of target is {target.shape}"

@@ -1,6 +1,7 @@
 import sys
 import jax
 from tqdm import tqdm
+from tqdm.notebook import tqdm as tqdm_notebook
 import equinox as eqx
 from jaxtyping import PRNGKeyArray as PRNGKey
 from src.base import Target
@@ -62,7 +63,9 @@ def subsample_trainer(
         subsample: int,
         metrics=None,
         checkpoint=None,
-        use_jit=False):
+        use_jit=False,
+        notebook=False
+        ):
     '''
     step : Callable[[PRNGKey, Dict, Target, Array], Tuple[float, Dict]] 
     '''
@@ -72,8 +75,13 @@ def subsample_trainer(
     if subsample > target.train_size:
         print(f"Subsample size {subsample} changed to train size {target.train_size}")
         subsample = target.train_size
-    pbar = tqdm(range(max_epochs),
-                leave=False)
+    if notebook:
+        pbar = tqdm_notebook(range(max_epochs),
+                             leave=False,
+                             desc="Training")
+    else:
+        pbar = tqdm(range(max_epochs),
+                    leave=False)
     for _ in pbar:
         a_lval = 0
         n_iter = ceil(target.train_size / subsample)

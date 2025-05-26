@@ -73,6 +73,7 @@ events.out.tfevents.*
 tensorboard_data/
 
 *.ipynb
+*.npy
 
 # Coverage reports
 htmlcov/

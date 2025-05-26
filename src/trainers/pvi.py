@@ -13,7 +13,8 @@ from src.base import (Target,
 from jaxtyping import PyTree
 from jax.lax import map
 
-
+# seems already using an encoder that 
+# has information about the y
 def de_particle_grad(key: jax.random.PRNGKey,
                      pid : PID,
                      target: Target,
@@ -31,9 +32,12 @@ def de_particle_grad(key: jax.random.PRNGKey,
         of scores using the reparameterization trick.
         '''
         vf = vmap(pid.conditional.f, (None, None, 0))
+        # mapped over batch dim of eps
         samples = vf(particle, y, eps)
         assert samples.shape == (mc_n_samples, target.dim)
+        # q(x|y)
         logq = vmap(pid.log_prob, (0, None))(samples, y)
+        # p is the prior in p(x,y) model
         logp = vmap(target.log_prob, (0, None))(samples, y)
         assert logp.shape == (mc_n_samples,)
         assert logq.shape == (mc_n_samples,)
