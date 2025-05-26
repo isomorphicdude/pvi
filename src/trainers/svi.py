@@ -3,7 +3,7 @@ import jax.numpy as np
 from jax import vmap
 from jax.random import split
 from jax.scipy.special import logsumexp
-from src.trainers.util import loss_step
+from src.trainers.training_utils import loss_step
 import equinox as eqx
 from jaxtyping import PyTree
 from src.base import (

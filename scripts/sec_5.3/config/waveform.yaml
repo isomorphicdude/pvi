@@ -11,8 +11,8 @@ default_theta_parameters: &default_theta_parameters
 
 
 experiment:
-    n_subsample: 400
-    n_updates: 1000
+    n_subsample: 100
+    n_updates: 10
     n_reruns: 1
     problem_name: 'waveform'
     use_jit: True

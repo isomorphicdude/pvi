@@ -4,7 +4,7 @@ import jax.numpy as np
 import equinox as eqx
 from jax.lax import stop_gradient
 from jax.random import split
-from src.trainers.util import loss_step
+from src.trainers.training_utils import loss_step
 from jaxtyping import PyTree
 from src.base import (
     SVICarry,

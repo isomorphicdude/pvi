@@ -2,7 +2,7 @@ import jax
 from jax import grad, vmap
 import jax.numpy as np
 import equinox as eqx
-from src.trainers.util import loss_step
+from src.trainers.training_utils import loss_step
 from src.base import (
     Target,
     SMCarry,

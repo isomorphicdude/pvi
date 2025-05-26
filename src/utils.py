@@ -91,7 +91,8 @@ def make_r_opt(key: jax.random.PRNGKey,
                ropt_param: ROptParameters,
                sgld: bool=False):
     """
-    Make an optimizer for distribution spacebased on the optimizer hyperparameters.
+    Make an optimizer for distribution space (particles)
+    based on the optimizer hyperparameters.
     """
     transform = []
 
