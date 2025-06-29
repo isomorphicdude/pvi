@@ -147,7 +147,7 @@ class SVIParameters(NamedTuple):
     Hyperparameters for SVI.
     """
     mc_n_samples: int = 250 # Number of Monte Carlo Samples for the Gradient Estimation
-    K: int = 50 # TODO
+    K: int = 50 # TODO # number of samples for the logq in Yin&Zhou
 
 
 class UVIParameters(NamedTuple):

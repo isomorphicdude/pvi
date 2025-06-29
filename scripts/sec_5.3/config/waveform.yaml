@@ -1,5 +1,5 @@
 default_parameters: &default_parameters
-    d_z: 10
+    d_z: 10 # latent dim (particle dim)
     kernel: 'FixedFullNormCond'
     n_hidden: 512
 
@@ -11,7 +11,7 @@ default_theta_parameters: &default_theta_parameters
 
 
 experiment:
-    n_subsample: 100
+    n_subsample: 10
     n_updates: 10
     n_reruns: 1
     problem_name: 'waveform'

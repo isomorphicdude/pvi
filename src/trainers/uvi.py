@@ -21,6 +21,7 @@ def de_loss(params: PyTree,
     '''
     Density Estimation Loss with path-wise gradients
     '''
+    # jax.debug.print("y shape: {}", y.shape)
     sid = eqx.combine(params, static)
     skey, lqkey = jax.random.split(key, 2)
     _samples, z = sid.sample_joint(skey,
@@ -31,7 +32,11 @@ def de_loss(params: PyTree,
                                  _samples,
                                  z,
                                  y)
+    # jax.debug.print("logq shape: {}", logq.shape)
     logp = vmap(target.log_prob, (0, None))(_samples, y)
+    # jax.debug.print("logp shape: {}", logp.shape)
+    assert logq.shape == logp.shape
+    assert logq.shape[0] == n_samples
     return np.mean(logq - logp, axis=0)
 
 
@@ -40,7 +45,10 @@ def de_step(key: jax.random.PRNGKey,
             target: Target,
             y: jax.Array,
             optim,
-            hyperparams: UVIParameters):
+            hyperparams: UVIParameters,
+            return_grad=False
+            ):
+    # jax.debug.print("y shape: {}", y.shape)
     def loss(key, params, static):
         return de_loss(params,
                        static,
@@ -48,10 +56,10 @@ def de_step(key: jax.random.PRNGKey,
                        target,
                        y,
                        n_samples=hyperparams.mc_n_samples)
-    lval, id, opt_state = loss_step(
+    lval, id, opt_state, _ = loss_step(
         key,
         loss, 
         carry.id,
         optim.theta_optim,
         carry.theta_opt_state)
-    return lval, SVICarry(id, opt_state)
+    return lval, SVICarry(id, opt_state), None

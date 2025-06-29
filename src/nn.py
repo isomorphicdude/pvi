@@ -56,6 +56,8 @@ class XYNet(Module):
                  d_z: int,
                  d_y: int,
                  n_hidden: int):
+        jax.debug.print("XYNet init")
+        jax.debug.print("d_x: {}, d_z: {}, d_y: {}, n_hidden: {}", d_x, d_z, d_y, n_hidden)
         self.net = Net(key,
                     d_z + d_y,
                     d_x * 2,
@@ -65,6 +67,9 @@ class XYNet(Module):
         self.d_y = d_y
 
     def __call__(self, z: jax.Array, y: jax.Array):
+        # jax.debug.print("XYNet call")
+        # jax.debug.print("z shape: {}", z.shape)
+        # jax.debug.print("y shape: {}", y.shape)
         x = self._format_input(z, y)
         x = self.net(x)
         mu = x[:self.d_x]

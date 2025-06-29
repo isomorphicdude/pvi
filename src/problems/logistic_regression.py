@@ -10,20 +10,26 @@ from src.model.logistic_regression import LReg
 class LogisticRegressionProblem:
     def log_prob(self, x, y=None, train=True):
         assert y is not None
+        bs = y.shape[0]
         if train:
             data = self.train
         else:
             data = self.test
         if y is not None:
+            # data is reshuffled
+            # here it is minibatched
             subset_data = data[0][y], data[1][y]
         log_likeli_fn = lambda feature, target : self.lr.log_likeli(
             x,
             (target, feature)
         )
         log_likeli =  jax.vmap(log_likeli_fn, (0, 0))(*subset_data) 
+        # jax.debug.print("log_likeli shape: {}", log_likeli.shape)
+        assert log_likeli.shape[0] == bs
         log_prior = self.lr.log_prior(x)
         assert log_prior.shape == log_likeli.shape[1:]
-        return log_likeli.mean(0) * data[0].shape[0] + log_prior
+        out = log_likeli.mean(0) * data[0].shape[0] + log_prior
+        return out
 
 
 class Waveform(LogisticRegressionProblem):

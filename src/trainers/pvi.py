@@ -13,8 +13,6 @@ from src.base import (Target,
 from jaxtyping import PyTree
 from jax.lax import map
 
-# seems already using an encoder that 
-# has information about the y
 def de_particle_grad(key: jax.random.PRNGKey,
                      pid : PID,
                      target: Target,
@@ -25,16 +23,27 @@ def de_particle_grad(key: jax.random.PRNGKey,
     Compute the gradient of the first variation
     using pathwise monte carlo gradient estimation
     with number of samples set to `mc_n_samples`
+    
+    Particle shape: (n_particles, dim)
     '''
+    # jax.debug.print(f"particles.shape: {particles.shape}")
+    # jax.debug.print(f"y.shape: {y.shape}")
     def ediff_score(particle, eps):
         '''
         Compute the expectation of the difference
         of scores using the reparameterization trick.
         '''
+        # jax.debug.print("particle.shape: {}", particle.shape)
         vf = vmap(pid.conditional.f, (None, None, 0))
         # mapped over batch dim of eps
+        # so the batch will share the same particles
+        # but different noise
+        # below is for each sample in the minibatch
+        # jax.debug.print("eps.shape: {}", eps.shape)
+        assert eps.shape[0] == mc_n_samples
         samples = vf(particle, y, eps)
         assert samples.shape == (mc_n_samples, target.dim)
+        jax.debug.print("samples.shape: {}", samples.shape)
         # q(x|y)
         logq = vmap(pid.log_prob, (0, None))(samples, y)
         # p is the prior in p(x,y) model
@@ -44,6 +53,7 @@ def de_particle_grad(key: jax.random.PRNGKey,
         logp = np.mean(logp, 0)
         logq = np.mean(logq, 0)
         return logq - logp
+    # the noise for reparameterization trick
     eps = pid.conditional.base_sample(key, mc_n_samples)
     # Can replace with map to reduce space requirements
     # grad = map(jax.grad(lambda p: ediff_score(p, eps)), particles)
