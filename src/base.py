@@ -46,7 +46,7 @@ class ModelParameters(NamedTuple):
     d_z: int
     use_particles: bool
     n_hidden: int = 0
-    d_y : int = 0
+    d_y : int = 10
     kernel: str = 'fixed_diag_norm'
     n_particles: int=0
 

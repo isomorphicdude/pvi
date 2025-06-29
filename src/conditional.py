@@ -276,6 +276,8 @@ class FixedFullNormCond(FullNormCond):
                  d_z: int,
                  d_y: int,
                  n_hidden: int):
+        jax.debug.print("FixedFullNormCond init")
+        jax.debug.print("d_x: {}, d_z: {}, d_y: {}, n_hidden: {}", d_x, d_z, d_y, n_hidden)
         self.net = XYNet(
             key,
             d_x,
