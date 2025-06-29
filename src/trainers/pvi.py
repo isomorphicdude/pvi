@@ -43,7 +43,7 @@ def de_particle_grad(key: jax.random.PRNGKey,
         assert eps.shape[0] == mc_n_samples
         samples = vf(particle, y, eps)
         assert samples.shape == (mc_n_samples, target.dim)
-        jax.debug.print("samples.shape: {}", samples.shape)
+        # jax.debug.print("samples.shape: {}", samples.shape)
         # q(x|y)
         logq = vmap(pid.log_prob, (0, None))(samples, y)
         # p is the prior in p(x,y) model
